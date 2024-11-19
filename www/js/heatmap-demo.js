@@ -12,35 +12,38 @@ const config = {
 // Global variables
 let heatmapInstance;
 
-window.addEventListener('load', async function() {
+window.addEventListener('load', async function () {
   // Init webgazer
   if (!window.saveDataAcrossSessions) {
-      var localstorageDataLabel = 'webgazerGlobalData';
-      localforage.setItem(localstorageDataLabel, null);
-      var localstorageSettingsLabel = 'webgazerGlobalSettings';
-      localforage.setItem(localstorageSettingsLabel, null);
+    var localstorageDataLabel = 'webgazerGlobalData';
+    localforage.setItem(localstorageDataLabel, null);
+    var localstorageSettingsLabel = 'webgazerGlobalSettings';
+    localforage.setItem(localstorageSettingsLabel, null);
   }
   const webgazerInstance = await webgazer.setRegression('ridge') /* currently must set regression and tracker */
     .setTracker('TFFacemesh')
     .begin();
-  
+
   // Turn off video
   webgazerInstance.showVideoPreview(false) /* shows all video previews */
     .showPredictionPoints(false); /* shows a square every 100 milliseconds where current prediction is */
-  
-    // Enable smoothing
+
+  // Enable smoothing
   webgazerInstance.applyKalmanFilter(true); // Kalman Filter defaults to on.
-  
+
   // Set up heatmap parts
   setupHeatmap();
-  webgazer.setGazeListener( eyeListener );
+  webgazer.setGazeListener(eyeListener);
+
+  // Set up bg video
+  setupBackgroundVideo();
 });
 
-window.addEventListener('beforeunload', function() {
+window.addEventListener('beforeunload', function () {
   if (window.saveDataAcrossSessions) {
-      webgazer.end();
+    webgazer.end();
   } else {
-      localforage.clear();
+    localforage.clear();
   }
 });
 
@@ -54,7 +57,7 @@ async function clickListener(event) {
 function setupHeatmap() {
   // Don't use mousemove listener
   webgazer.removeMouseEventListeners();
-  document.addEventListener('click', clickListener);
+  document.body.addEventListener('click', clickListener);
 
   // Get the window size
   let height = window.innerHeight;
@@ -78,25 +81,33 @@ async function eyeListener(data, clock) {
   // data is the gaze data, clock is the time since webgazer.begin()
 
   // Init if lastTime not set
-  if(!lastTime) {
+  if (!lastTime) {
     lastTime = clock;
   }
 
   // In this we want to track how long a point was being looked at,
   // so we need to buffer where the gaze moves to and then on next move
   // we calculate how long the gaze stayed there.
-  if(!!lastGaze) {
-    if(!!lastGaze.x && !!lastGaze.y) {
-      let duration = clock-lastTime;
+  if (!!lastGaze) {
+    if (!!lastGaze.x && !!lastGaze.y) {
+      let duration = clock - lastTime;
       let point = {
         x: Math.floor(lastGaze.x),
         y: Math.floor(lastGaze.y),
         value: duration
-      }
+      };
       heatmapInstance.addData(point);
     }
   }
 
   lastGaze = data;
   lastTime = clock;
+}
+
+
+
+function setupBackgroundVideo() {
+  const container = document.querySelector("#iframeContainer");
+  container.style.width = `${innerWidth}px`;
+  container.style.height = `${innerHeight}px`;
 }

@@ -43,5 +43,8 @@ function Restart() {
   PopUpInstruction();
 
   // Hide BG Vid
-  document.querySelector("#iframeContainer").style.display = "none";
+  const iframeContainer = document.querySelector("#iframeContainer");
+  iframeContainer.style.opacity = "0.2";
+  iframeContainer.style.pointerEvents = "none";
+
 }

@@ -21,16 +21,16 @@ button {
   left: 0px !important;
   width: 320px !important;
   height: 240px !important;
-  z-index: 1;
+  z-index: 11;
 }
 
 /* Navbar styling */
 #webgazerNavbar {
-  position: "absolute";
+  position: fixed;
   top: 0px;
   left: 320px;
   width: calc(100% - 320px);
-  z-index: 10;
+  z-index: 11;
   box-shadow: 0px 3px 5px #ddd;
   border: 0px;
   background-color: #fff;

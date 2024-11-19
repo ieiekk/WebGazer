@@ -25,15 +25,16 @@ Instructions on use can be found in the README repository.
       height: 100%;
       position: fixed;
       z-index: 10;
-      display: none;
+      opacity: 0.2;
     }
 
     #iframeContainer>iframe {
       width: 100%;
+      height: 100%;
     }
 
     #heatmapContainer {
-      position: fixed;
+      position: fixed !important;
       z-index: 10;
       pointer-events: none;
     }
@@ -78,6 +79,7 @@ Instructions on use can be found in the README repository.
           <li><a class="helpBtn" onclick="helpModalShow()" href="#"><span class="glyphicon glyphicon-cog"></span>
               Help</a></li>
         </ul>
+
       </div>
     </div>
   </nav>
@@ -85,10 +87,10 @@ Instructions on use can be found in the README repository.
 
   <!-- Video -->
   <div id="iframeContainer">
-    <iframe id="content" src="https://www.youtube.com/embed/CsrmS0id6So?si=anOKG07TrVVLwpsh"
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/xiQMpt37vR8?si=iN03SwkllvOnE34g"
       title="YouTube video player" frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      referrerpolicy="no-referrer" allowfullscreen></iframe>
   </div>
   <div id="heatmapContainer"> </div>
 

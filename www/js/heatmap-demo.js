@@ -71,6 +71,9 @@ function setupHeatmap() {
 
   // create heatmap
   heatmapInstance = h337.create(config);
+  heatmapInstance.setDataMax(100);
+  
+  window.heatmapInstance = heatmapInstance;
 }
 
 // Heatmap buffer
@@ -97,6 +100,7 @@ async function eyeListener(data, clock) {
         value: duration
       };
       heatmapInstance.addData(point);
+
     }
   }
 

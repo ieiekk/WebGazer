@@ -77,7 +77,17 @@ function calcAccuracy() {
           ClearCanvas();
 
           // Show the BG video
-          document.querySelector("#iframeContainer").style.display = "flex";
+          const iframeContainer = document.querySelector("#iframeContainer");
+          iframeContainer.style.opacity = "1";
+          iframeContainer.style.pointerEvents = "auto";
+
+          // Repaint
+          window.heatmapInstance.setData({
+            max: 100,
+            min: 0,
+            data: []
+          });
+
         } else {
           //use restart function to restart the calibration
           document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";

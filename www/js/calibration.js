@@ -81,10 +81,12 @@ function calcAccuracy() {
           iframeContainer.style.opacity = "1";
           iframeContainer.style.pointerEvents = "auto";
 
+          // Hide the camera
+          document.querySelectorAll("#webgazerVideoContainer").forEach(container => container.style.display = "none");
+
+
           // Repaint
           window.heatmapInstance.setData({
-            max: 100,
-            min: 0,
             data: []
           });
 
@@ -168,6 +170,9 @@ function ShowCalibrationPoint() {
   });
   // initially hides the middle button
   document.getElementById('Pt5').style.setProperty('display', 'none');
+
+  // Show camera
+  document.querySelectorAll("#webgazerVideoContainer").forEach(container => container.style.display = "block");
 }
 
 /**

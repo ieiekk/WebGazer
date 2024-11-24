@@ -1,10 +1,10 @@
 // Set to true if you want to save the data even if you reload the page.
-window.saveDataAcrossSessions = false;
+window.saveDataAcrossSessions = true;
 
 // heatmap configuration
 const config = {
-  radius: 25,
-  maxOpacity: .5,
+  radius: 35,
+  maxOpacity: .3,
   minOpacity: 0,
   blur: .75
 };
@@ -25,7 +25,7 @@ window.addEventListener('load', async function () {
     .begin();
 
   // Turn off video
-  webgazerInstance.showVideoPreview(false) /* shows all video previews */
+  webgazerInstance.showVideoPreview(true) /* shows all video previews */
     .showPredictionPoints(false); /* shows a square every 100 milliseconds where current prediction is */
 
   // Enable smoothing
@@ -37,6 +37,19 @@ window.addEventListener('load', async function () {
 
   // Set up bg video
   setupBackgroundVideo();
+
+  //Set up the webgazer video feedback.
+  var setup = function () {
+
+    //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+    var canvas = document.getElementById("plotting_canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = 'fixed';
+
+  };
+  setup();
+
 });
 
 window.addEventListener('beforeunload', function () {
@@ -46,6 +59,10 @@ window.addEventListener('beforeunload', function () {
     localforage.clear();
   }
 });
+
+
+
+
 
 // Trimmed down version of webgazer's click listener since the built-in one isn't exported
 // Needed so we can have just the click listener without the move listener
@@ -73,6 +90,16 @@ function setupHeatmap() {
   heatmapInstance = h337.create(config);
 
   window.heatmapInstance = heatmapInstance;
+
+  // Clean old data every 10s
+  setInterval(() => {
+    const data = window.heatmapInstance.getData().data.slice(-100);
+
+    // Repaint
+    window.heatmapInstance.setData({
+      data
+    });
+  }, 10000);
 }
 
 // Heatmap buffer
@@ -112,5 +139,22 @@ async function eyeListener(data, clock) {
 function setupBackgroundVideo() {
   const container = document.querySelector("#iframeContainer");
   container.style.width = `${innerWidth}px`;
-  container.style.height = `${innerHeight}px`;
+  container.style.height = `${innerHeight - 70}px`;
+}
+
+
+/**
+ * Restart the calibration process by clearing the local storage and reseting the calibration point
+ */
+function Restart() {
+  document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";
+  webgazer.clearData();
+  ClearCalibration();
+  PopUpInstruction();
+
+  // Hide BG Vid
+  const iframeContainer = document.querySelector("#iframeContainer");
+  iframeContainer.style.opacity = "0.2";
+  iframeContainer.style.pointerEvents = "none";
+
 }
